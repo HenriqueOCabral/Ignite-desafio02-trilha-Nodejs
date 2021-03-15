@@ -39,21 +39,23 @@ function checksTodoExists(request, response, next) {
 
   const user = users.find((user) => user.username === username);
 
-  const todo = user.todos.find((todo) => todo.id === id);
+  let todo;
 
   const testID = validate(id);
   
+    if (user) {
+      todo = user.todos.find((todo) => todo.id === id);
+    }
+
   if (!testID) {
       return response.status(400).json({ error: "Not UUID" });
   }
 
-  if (!user) {
+  if (!user || !todo) {
     return response.status(404).json({ error: "Invalid Request!" });
   }
 
-  if (!todo) {
-    return response.status(404).json({ error: "Invalid Request!" });
-  }
+
 
   request.user = user;
   request.todo = todo;
